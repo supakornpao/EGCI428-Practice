@@ -1,1 +1,1 @@
-# egci428_practice_2024_25T1
+# egci428-practice-2024-25T1
