@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import android.content.Intent
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ListView
 import android.widget.Toast
 import com.egci428.egci428_practice_2024_25t1.model.User
@@ -19,7 +20,11 @@ import java.lang.Exception
 
 class UserListActivity : AppCompatActivity() {
 
+
+    private val file = "users.txt"
     lateinit var userList: MutableList<User>
+    lateinit var user: User
+    lateinit var useradapter: UserAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +40,9 @@ class UserListActivity : AppCompatActivity() {
         val listView = findViewById<ListView>(R.id.listView)
 
         userList = mutableListOf()
-
+        useradapter = UserAdapter(this,R.layout.userlist, userList)
+        listView.adapter = useradapter
+        read()
 
         listView.setOnItemClickListener { parent, view, position, id ->
 
@@ -52,4 +59,29 @@ class UserListActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+    fun read(){
+        try {
+
+            var FileIn = openFileInput(file)
+            val mFile = InputStreamReader(FileIn)
+
+            val br = BufferedReader(mFile)
+            while(true) {
+                var line = br.readLine()
+                if(line==null) break;
+
+                val userline = line.split(";")
+                user = User(userline[0],userline[1],userline[2].toDouble(),userline[3].toDouble())
+                userList.add(user)
+
+            }
+            br.close()
+            mFile.close()
+            FileIn.close()
+        }
+        catch (e: Exception){
+            e.printStackTrace()
+        }
     }
+
+}
